@@ -1,0 +1,10 @@
+#BACKEND
+
+venv
+stx_next_recruitment/stx_next_recruitment/.env
+.idea/shelf/
+.idea/*.iws
+.idea/workspace.xml
+.idea/tasks.xml
+*/__pycache__
+**/__pycache__
