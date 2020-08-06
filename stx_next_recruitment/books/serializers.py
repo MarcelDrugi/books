@@ -1,9 +1,9 @@
 from contextlib import suppress
-
 from django.db import transaction
 from rest_framework import serializers
-from books.models import Authors, Categories, Books
 from rest_framework.exceptions import ValidationError
+from books.models import Authors, Categories, Books
+
 
 
 class AuthorsSerializer(serializers.ModelSerializer):

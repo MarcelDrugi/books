@@ -1,13 +1,13 @@
 import requests
-from django.core.exceptions import FieldError
-from django.views.generic import TemplateView
 from rest_framework import status, filters
 from rest_framework.generics import GenericAPIView
 from rest_framework.mixins import ListModelMixin
 from rest_framework.response import Response
+from django.core.exceptions import FieldError
+from django.views.generic import TemplateView
 from books.models import Books
-from books.serializers import BooksSerializer
-from books.serializers import CriteriaSerializer, RawDataSerializer
+from books.serializers import BooksSerializer, CriteriaSerializer, \
+    RawDataSerializer
 
 
 class InfoView(TemplateView):
@@ -30,7 +30,6 @@ class SingleBookView(GenericAPIView):
             )
         else:
             serialized_book = BooksSerializer(book)
-            print(serialized_book.data)
             return Response(
                 serialized_book.data,
                 status=status.HTTP_200_OK
@@ -68,7 +67,7 @@ class ListBooksView(GenericAPIView, ListModelMixin):
                 elif key == 'title':
                     for value in value_list:
                         queryset = queryset.filter(title=value[1:-1])
-                elif key != 'ordering':
+                elif key != 'ordering' and key != 'sort':
                     for value in value_list:
                         criterion = {key: value}
                         queryset = queryset.filter(**criterion)
@@ -97,16 +96,17 @@ class ListBooksView(GenericAPIView, ListModelMixin):
                 many=True
             )
             if deserialized_records.is_valid():
-                deserialized_records.save()
+                new_books = deserialized_records.save()
+                serialized_new_books = BooksSerializer(new_books, many=True)
+                return Response(
+                    {'saved_books': serialized_new_books.data},
+                    status=status.HTTP_201_CREATED
+                )
             else:
                 return Response(
                     {'error': 'Sorry, an internal server error'},
                     status=status.HTTP_500_INTERNAL_SERVER_ERROR
                 )
-            return Response(
-                records['items'],
-                status=status.HTTP_202_ACCEPTED
-            )
         else:
             return Response(
                 {'error': 'Wrong body-data format'},
