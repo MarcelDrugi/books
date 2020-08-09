@@ -5,7 +5,6 @@ from rest_framework.exceptions import ValidationError
 from books.models import Authors, Categories, Books
 
 
-
 class AuthorsSerializer(serializers.ModelSerializer):
 
     def to_representation(self, value):
@@ -36,7 +35,7 @@ class BooksSerializer(serializers.ModelSerializer):
 
 
 class CriteriaSerializer(serializers.Serializer):
-    q = serializers.CharField(max_length=512)
+    q = serializers.CharField(max_length=256)
 
 
 class RawDataSerializer(serializers.Serializer):

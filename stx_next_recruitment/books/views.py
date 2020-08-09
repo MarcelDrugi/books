@@ -72,7 +72,7 @@ class ListBooksView(GenericAPIView, ListModelMixin):
                         criterion = {key: value}
                         queryset = queryset.filter(**criterion)
 
-        except(ValueError, AttributeError, KeyError, FieldError, Exception):
+        except(ValueError, AttributeError, KeyError, FieldError):
             self.error = True
 
         return queryset
